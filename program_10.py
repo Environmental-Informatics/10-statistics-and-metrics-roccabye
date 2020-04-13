@@ -199,7 +199,7 @@ def GetMonthlyStatistics(DataDF):
     colNames = ['site_no','Mean Flow','Coeff Var','TQmean','R-B Index']
     
     # Monthly distribution of the streamflow timeseries.
-    Month_dist = DataDF.resample('M')
+    Month_dist = DataDF.resample('MS')
     
     # Creating dataframe of monthly descriptive statistics and metrics for the given streamflow time series
     data_monthly = Month_dist.mean()
