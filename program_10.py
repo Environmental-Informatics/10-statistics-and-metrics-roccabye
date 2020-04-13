@@ -143,7 +143,7 @@ def GetAnnualStatistics(DataDF):
     starts on October 1."""
     
     # define column names for the dataframe
-    colNames = ['site_no','Mean Flow','Peak Flow','Median','Coeff Var','Skew','TQmean','R-B Index','7Q','3xMedian']
+    colNames = ['site_no','Mean Flow','Peak Flow','Median','Coeff Var','Skew','Tqmean','R-B Index','7Q','3xMedian']
     
     # Water Year is from Oct 01 to Sep 30 (USGS definition)
     Water_Year = DataDF.resample('AS-OCT')
@@ -163,7 +163,7 @@ def GetAnnualStatistics(DataDF):
     WYDataDF['Peak Flow']=Water_Year['Discharge'].max()
     
     # median value of streamflow discharge for the water year
-    WYDataDF['Median']=Water_Year['Discharge'].median()
+    WYDataDF['Median Flow']=Water_Year['Discharge'].median()
     
     # coefficient of variation(st. deviation/mean) of streamflow discharge for the water year
     WYDataDF['Coeff Var']=(Water_Year['Discharge'].std()/Water_Year['Discharge'].mean())*100
@@ -173,7 +173,7 @@ def GetAnnualStatistics(DataDF):
     
     # Tqmean(fraction of time that daily streamflow exceeds mean streamflow for each year) 
     # of streamflow for the water year computed with CalcTqmean function above.
-    WYDataDF['TQmean']=Water_Year.apply({'Discharge': lambda x: CalcTqmean(x)})
+    WYDataDF['Tqmean']=Water_Year.apply({'Discharge': lambda x: CalcTqmean(x)})
     
     # R-B Index(sum of the absolute values of day-to-day changes in daily discharge 
     # volumes/total discharge volumes for each year) of streamflow for the water year 
@@ -196,7 +196,7 @@ def GetMonthlyStatistics(DataDF):
     of monthly values for each year."""
     
     # define column names for the dataframe
-    colNames = ['site_no','Mean Flow','Coeff Var','TQmean','R-B Index']
+    colNames = ['site_no','Mean Flow','Coeff Var','Tqmean','R-B Index']
     
     # Monthly distribution of the streamflow timeseries.
     Month_dist = DataDF.resample('MS')
@@ -217,7 +217,7 @@ def GetMonthlyStatistics(DataDF):
     
     # Tqmean(fraction of time that daily streamflow exceeds mean streamflow for each year) 
     # of streamflow, computed with CalcTqmean function above.
-    MoDataDF['TQmean']=Month_dist.apply({'Discharge': lambda x: CalcTqmean(x)})
+    MoDataDF['Tqmean']=Month_dist.apply({'Discharge': lambda x: CalcTqmean(x)})
     
     # R-B Index(sum of the absolute values of day-to-day changes in daily discharge 
     # volumes/total discharge volumes for each year) of streamflow  
@@ -244,7 +244,7 @@ def GetMonthlyAverages(MoDataDF):
     
     
     # define column names for the dataframe
-    colNames = ['site_no','Mean Flow','Coeff Var','TQmean','R-B Index']
+    colNames = ['site_no','Mean Flow','Coeff Var','Tqmean','R-B Index']
     
     # Creating dataframe of annual average monthly values statistics and metrics 
     MonthlyAverages = pd.DataFrame(0,index = range(1,13),columns = colNames)
@@ -264,7 +264,7 @@ def GetMonthlyAverages(MoDataDF):
         MonthlyAverages.iloc[index,2]=MoDataDF['Coeff Var'][j[index]::12].mean()
         
         # mean of Tqmean of streamflow from ModataDF dataframe
-        MonthlyAverages.iloc[index,3]=MoDataDF['TQmean'][j[index]::12].mean()
+        MonthlyAverages.iloc[index,3]=MoDataDF['Tqmean'][j[index]::12].mean()
        
         # mean of RBIndex from the MoDataDF dataframe
         MonthlyAverages.iloc[index,4]=MoDataDF['R-B Index'][j[index]::12].mean()
